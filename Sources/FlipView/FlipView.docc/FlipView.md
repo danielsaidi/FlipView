@@ -56,7 +56,8 @@ FlipView is available under the MIT license.
 
 ### Essentials
 
-- ``FlipView``
+- ``FlipDirection``
+- ``FlipGestureViewModifier``
 
 
 

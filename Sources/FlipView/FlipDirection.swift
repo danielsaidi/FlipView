@@ -1,0 +1,16 @@
+//
+//  FlipDirection.swift
+//  FlipView
+//
+//  Created by Daniel Saidi on 2020-01-05.
+//  Copyright © 2020-2025 Daniel Saidi. All rights reserved.
+//
+
+import Foundation
+
+/// This enum defines the supported flip directions that can
+/// be used with a ``FlipView``.
+public enum FlipDirection {
+    
+    case left, right, up, down
+}
