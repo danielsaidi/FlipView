@@ -8,6 +8,6 @@ import Testing
     _ = await FlipView(
         isFlipped: .constant(true),
         front: { Color.green },
-        back: { Color.red },
+        back: { Color.red }
     )
 }
