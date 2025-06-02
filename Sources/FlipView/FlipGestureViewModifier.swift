@@ -1,6 +1,6 @@
 //
 //  FlipGestureViewModifier.swift
-//  SwiftUIKit
+//  FlipView
 //
 //  Created by Daniel Saidi on 2020-01-03.
 //  Copyright © 2020-2025 Daniel Saidi. All rights reserved.
@@ -87,6 +87,7 @@ public struct FlipGestureViewModifier: ViewModifier {
             DragGesture(minimumDistance: minimumDistance)
                 .onChanged { _ in gestureTimer.start() }
                 .onEnded { gesture in
+                    defer { gestureTimer.reset() }
                     guard gestureTimer.elapsedTime < maximumTime else { return }
                     let translation = gesture.translation
                     let absHeight = abs(translation.height)
