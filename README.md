@@ -15,6 +15,11 @@
 
 FlipKit is a SwiftUI library with a `FlipView` component that works on all major Apple platforms.
 
+<p align="center">
+    <img src="https://github.com/danielsaidi/FlipKit/releases/download/0.1.0/FlipKit-Demo.gif" alt="Demo Gif" width="300" />
+</p>
+
+The `FlipView` component can be customized with custom content views, flip durations, flip directions, etc.
 
 
 ## Installation
