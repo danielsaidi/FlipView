@@ -20,29 +20,47 @@ import SwiftUI
 /// modifier that performs the `ZStack` wrapping.
 public struct FlipView<FrontView: View, BackView: View>: View {
 
+    /// Create a flip view with content view values.
+    ///
+    /// - Parameters:
+    ///   - isFlipped: The flipped state.
+    ///   - flipDuration: The duration of the flip, by deffault `0.3`.
+    ///   - tapDirection: The direction to flip on tap, by default `.right`.
+    ///   - flipDirections: The supported flip directions, by default `.allCases`.
+    ///   - front: The front view.
+    ///   - back: The back view.
     public init(
         front: FrontView,
         back: BackView,
         isFlipped: Binding<Bool>,
         flipDuration: Double? = nil,
         tapDirection: FlipDirection? = nil,
-        swipeDirections: [FlipDirection]? = nil
+        flipDirections: [FlipDirection]? = nil
     ) {
         self.init(
             isFlipped: isFlipped,
             flipDuration: flipDuration,
             tapDirection: tapDirection,
-            swipeDirections: swipeDirections,
+            flipDirections: flipDirections,
             front: { front },
             back: { back }
         )
     }
-
+    
+    /// Create a flip view with content view builders.
+    ///
+    /// - Parameters:
+    ///   - isFlipped: The flipped state.
+    ///   - flipDuration: The duration of the flip, by deffault `0.3`.
+    ///   - tapDirection: The direction to flip on tap, by default `.right`.
+    ///   - flipDirections: The supported flip directions, by default `.allCases`.
+    ///   - front: The front view.
+    ///   - back: The back view.
     public init(
         isFlipped: Binding<Bool>,
         flipDuration: Double? = nil,
         tapDirection: FlipDirection? = nil,
-        swipeDirections: [FlipDirection]? = nil,
+        flipDirections: [FlipDirection]? = nil,
         @ViewBuilder front: @escaping () -> FrontView,
         @ViewBuilder back: @escaping () -> BackView,
     ) {
@@ -51,7 +69,7 @@ public struct FlipView<FrontView: View, BackView: View>: View {
         self._isFlipped = isFlipped
         self.flipDuration = flipDuration ?? 0.3
         self.tapDirection = tapDirection ?? .right
-        self.swipeDirections = swipeDirections ?? [.left, .right]
+        self.flipDirections = flipDirections ?? .allCases
 
         let isFlippedValue = isFlipped.wrappedValue
         self._isContentFlipped = .init(initialValue: isFlippedValue)
@@ -62,7 +80,7 @@ public struct FlipView<FrontView: View, BackView: View>: View {
     private let front: () -> FrontView
     private let back: () -> BackView
     private let flipDuration: Double
-    private let swipeDirections: [FlipDirection]
+    private let flipDirections: [FlipDirection]
     private let tapDirection: FlipDirection
 
     @State private var cardRotation = 0.0
@@ -168,7 +186,7 @@ private extension FlipView {
     }
 
     func flipWithSwipe(in direction: FlipDirection) {
-        guard swipeDirections.contains(direction) else { return }
+        guard flipDirections.contains(direction) else { return }
         flip(direction)
     }
 }
@@ -198,7 +216,7 @@ func previewContent(isFlipped: Binding<Bool>) -> some View {
         isFlipped: isFlipped,
         flipDuration: 0.2,
         tapDirection: .right,
-        swipeDirections: [.left, .right, .up, .down]
+        flipDirections: [.left, .right, .up, .down]
     )
     .withListRenderingBugFix()  // OBS!
     .frame(minHeight: 100)

@@ -48,7 +48,7 @@ struct MyView: View {
             isFlipped: $isFlipped,
             flipDuration: 1.0,
             tapDirection: .right,
-            swipeDirections: [.left, .right, .up, .down],
+            flipDirections: [.left, .right, .up, .down],
             front: { Card(color: .green) },
             back: { Card(color: .red) }
         )
