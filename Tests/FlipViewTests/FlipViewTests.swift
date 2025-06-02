@@ -1,6 +1,13 @@
+import FlipKit
+import SwiftUI
 import Testing
-@testable import FlipView
 
-@Test func example() async throws {
-    // Write your test here and use APIs like `#expect(...)` to check expected conditions.
+@Test func allPublicTypesCanBeCreated() async throws {
+    _ = FlipDirection.down
+    _ = await FlipGestureViewModifier()
+    _ = await FlipView(
+        isFlipped: .constant(true),
+        front: { Color.green },
+        back: { Color.red },
+    )
 }
