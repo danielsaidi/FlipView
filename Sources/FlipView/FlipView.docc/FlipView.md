@@ -33,10 +33,25 @@ With `FlipView`, you just have to provide a front and back view:
 ```swift
 import FlipView
 
-...
+struct MyView: View {
+
+    @State private var isFlipped = false
+
+    var body: some View {
+        FlipView(
+            isFlipped: $isFlipped,
+            flipDuration: 1.0,
+            tapDirection: .right,
+            swipeDirections: [.left, .right, .up, .down],
+            front: { Color.green.overlay(Text("Front")) },
+            back: { Color.red.overlay(Text("Back")) }
+        )
+        .withListRenderingBugFix()  // Use this when in a List 
+    }
+}
 ```
 
-More info sooooon...
+You can flip the view programatically by just toggling `isFlipped` with code.
 
 
 

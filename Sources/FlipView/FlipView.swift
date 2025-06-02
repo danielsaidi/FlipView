@@ -24,16 +24,34 @@ public struct FlipView<FrontView: View, BackView: View>: View {
         front: FrontView,
         back: BackView,
         isFlipped: Binding<Bool>,
-        flipDuration: Double = 0.3,
-        tapDirection: FlipDirection = .right,
-        swipeDirections: [FlipDirection] = [.left, .right]
+        flipDuration: Double? = nil,
+        tapDirection: FlipDirection? = nil,
+        swipeDirections: [FlipDirection]? = nil
+    ) {
+        self.init(
+            isFlipped: isFlipped,
+            flipDuration: flipDuration,
+            tapDirection: tapDirection,
+            swipeDirections: swipeDirections,
+            front: { front },
+            back: { back }
+        )
+    }
+
+    public init(
+        isFlipped: Binding<Bool>,
+        flipDuration: Double? = nil,
+        tapDirection: FlipDirection? = nil,
+        swipeDirections: [FlipDirection]? = nil,
+        @ViewBuilder front: @escaping () -> FrontView,
+        @ViewBuilder back: @escaping () -> BackView,
     ) {
         self.front = front
         self.back = back
         self._isFlipped = isFlipped
-        self.flipDuration = flipDuration
-        self.tapDirection = tapDirection
-        self.swipeDirections = swipeDirections
+        self.flipDuration = flipDuration ?? 0.3
+        self.tapDirection = tapDirection ?? .right
+        self.swipeDirections = swipeDirections ?? [.left, .right]
 
         let isFlippedValue = isFlipped.wrappedValue
         self._isContentFlipped = .init(initialValue: isFlippedValue)
@@ -41,8 +59,8 @@ public struct FlipView<FrontView: View, BackView: View>: View {
 
     @Binding private var isFlipped: Bool
 
-    private let front: FrontView
-    private let back: BackView
+    private let front: () -> FrontView
+    private let back: () -> BackView
     private let flipDuration: Double
     private let swipeDirections: [FlipDirection]
     private let tapDirection: FlipDirection
@@ -68,9 +86,9 @@ public struct FlipView<FrontView: View, BackView: View>: View {
     @ViewBuilder
     var bodyContent: some View {
         if isContentFlipped {
-            back
+            back()
         } else {
-            front
+            front()
         }
     }
 }
@@ -178,7 +196,7 @@ func previewContent(isFlipped: Binding<Bool>) -> some View {
         front: Color.green.overlay(Text("Front")),
         back: Color.red.overlay(Text("Back")),
         isFlipped: isFlipped,
-        flipDuration: 0.5,
+        flipDuration: 0.2,
         tapDirection: .right,
         swipeDirections: [.left, .right, .up, .down]
     )
@@ -212,7 +230,7 @@ func previewContent(isFlipped: Binding<Bool>) -> some View {
     return Preview()
 }
 
-#Preview("List (BUG)") {
+#Preview("List Bugfix") {
 
     struct Preview: View {
 
