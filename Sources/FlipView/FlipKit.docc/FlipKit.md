@@ -1,13 +1,13 @@
-# ``FlipView``
+# ``FlipKit``
 
-FlipView is a SwiftUI library with a ``FlipView`` component that works on all major Apple platforms.
+FlipKit is a SwiftUI library with flip utilities that work on all major Apple platforms.
 
 
 ## Overview
 
 ![Library logotype](Logo.png)
 
-FlipView is a SwiftUI library with a ``FlipView`` component that works on all major Apple platforms.
+FlipKit is a SwiftUI library with flip utilities that work on all major Apple platforms, like the multi-platform ``FlipView``.
 
 
 
@@ -28,10 +28,10 @@ You can [become a sponsor][Sponsors] to help me dedicate more time on my various
 
 ## Getting started
 
-With `FlipView`, you just have to provide a front and back view: 
+With FlipKit's `FlipView`, you just have to provide a front and back view: 
 
 ```swift
-import FlipView
+import FlipKit
 
 struct MyView: View {
 
@@ -43,10 +43,19 @@ struct MyView: View {
             flipDuration: 1.0,
             tapDirection: .right,
             swipeDirections: [.left, .right, .up, .down],
-            front: { Color.green.overlay(Text("Front")) },
-            back: { Color.red.overlay(Text("Back")) }
+            front: { Card(color: .green) },
+            back: { Card(color: .red) }
         )
         .withListRenderingBugFix()  // Use this when in a List 
+    }
+}
+
+struct Card: View {
+
+    let color: Color
+
+    var body: some View {
+        color.cornerRadius(10)
     }
 }
 ```
@@ -57,13 +66,13 @@ You can flip the view programatically by just toggling `isFlipped` with code.
 
 ## Repository
 
-For more information, source code, etc., visit the [project repository](https://github.com/danielsaidi/FlipView).
+For more information, source code, etc., visit the [project repository](https://github.com/danielsaidi/FlipKit).
 
 
 
 ## License
 
-FlipView is available under the MIT license.
+FlipKit is available under the MIT license.
 
 
 
@@ -71,7 +80,7 @@ FlipView is available under the MIT license.
 
 ### Essentials
 
-- ``FlipView/FlipView``
+- ``FlipView``
 - ``FlipDirection``
 - ``FlipGestureViewModifier``
 

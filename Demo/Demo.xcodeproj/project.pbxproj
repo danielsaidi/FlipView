@@ -7,7 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		A9A7D6722DED9A3F00EA724C /* FlipView in Frameworks */ = {isa = PBXBuildFile; productRef = A9A7D6712DED9A3F00EA724C /* FlipView */; };
+		A96015B72DED9CAD00FC9572 /* FlipKit in Frameworks */ = {isa = PBXBuildFile; productRef = A96015B62DED9CAD00FC9572 /* FlipKit */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -27,7 +27,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				A9A7D6722DED9A3F00EA724C /* FlipView in Frameworks */,
+				A96015B72DED9CAD00FC9572 /* FlipKit in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -70,7 +70,7 @@
 			);
 			name = Demo;
 			packageProductDependencies = (
-				A9A7D6712DED9A3F00EA724C /* FlipView */,
+				A96015B62DED9CAD00FC9572 /* FlipKit */,
 			);
 			productName = Demo;
 			productReference = A9A7D6612DED9A2E00EA724C /* Demo.app */;
@@ -101,7 +101,7 @@
 			mainGroup = A9A7D6582DED9A2E00EA724C;
 			minimizedProjectReferenceProxies = 1;
 			packageReferences = (
-				A9A7D6702DED9A3F00EA724C /* XCLocalSwiftPackageReference "../../FlipView" */,
+				A96015B52DED9CAD00FC9572 /* XCLocalSwiftPackageReference "../../FlipKit" */,
 			);
 			preferredProjectObjectVersion = 77;
 			productRefGroup = A9A7D6622DED9A2E00EA724C /* Products */;
@@ -352,16 +352,16 @@
 /* End XCConfigurationList section */
 
 /* Begin XCLocalSwiftPackageReference section */
-		A9A7D6702DED9A3F00EA724C /* XCLocalSwiftPackageReference "../../FlipView" */ = {
+		A96015B52DED9CAD00FC9572 /* XCLocalSwiftPackageReference "../../FlipKit" */ = {
 			isa = XCLocalSwiftPackageReference;
-			relativePath = ../../FlipView;
+			relativePath = ../../FlipKit;
 		};
 /* End XCLocalSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
-		A9A7D6712DED9A3F00EA724C /* FlipView */ = {
+		A96015B62DED9CAD00FC9572 /* FlipKit */ = {
 			isa = XCSwiftPackageProductDependency;
-			productName = FlipView;
+			productName = FlipKit;
 		};
 /* End XCSwiftPackageProductDependency section */
 	};

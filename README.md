@@ -3,26 +3,26 @@
 </p>
 
 <p align="center">
-    <img src="https://img.shields.io/github/v/release/danielsaidi/FlipView?color=%2300550&sort=semver" alt="Version" />
+    <img src="https://img.shields.io/github/v/release/danielsaidi/FlipKit?color=%2300550&sort=semver" alt="Version" />
     <img src="https://img.shields.io/badge/swift-6.0-orange.svg" alt="Swift 6.0" />
-    <a href="https://danielsaidi.github.io/FlipView"><img src="https://img.shields.io/badge/documentation-web-blue.svg" alt="Documentation" /></a>
-    <a href="https://github.com/danielsaidi/FlipView/blob/master/LICENSE"><img src="https://img.shields.io/github/license/danielsaidi/FlipView" alt="MIT License" /></a>
+    <a href="https://danielsaidi.github.io/FlipKit"><img src="https://img.shields.io/badge/documentation-web-blue.svg" alt="Documentation" /></a>
+    <a href="https://github.com/danielsaidi/FlipKit/blob/master/LICENSE"><img src="https://img.shields.io/github/license/danielsaidi/FlipKit" alt="MIT License" /></a>
     <a href="https://github.com/sponsors/danielsaidi"><img src="https://img.shields.io/badge/sponsor-GitHub-red.svg" alt="Sponsor my work" /></a>
 </p>
 
 
-# FlipView
+# FlipKit
 
-FlipView is a SwiftUI library with a `FlipView` component that works on all major Apple platforms.
+FlipKit is a SwiftUI library with a `FlipView` component that works on all major Apple platforms.
 
 
 
 ## Installation
 
-FlipView can be installed with the Swift Package Manager:
+FlipKit can be installed with the Swift Package Manager:
 
 ```
-https://github.com/danielsaidi/FlipView.git
+https://github.com/danielsaidi/FlipKit.git
 ```
 
 
@@ -34,10 +34,10 @@ You can [become a sponsor][Sponsors] to help me dedicate more time on my various
 
 ## Getting Started
 
-With `FlipView`, you just have to provide a front and back view: 
+With FlipKit's `FlipView`, you just have to provide a front and back view: 
 
 ```swift
-import FlipView
+import FlipKit
 
 struct MyView: View {
 
@@ -49,10 +49,19 @@ struct MyView: View {
             flipDuration: 1.0,
             tapDirection: .right,
             swipeDirections: [.left, .right, .up, .down],
-            front: { Color.green.overlay(Text("Front")) },
-            back: { Color.red.overlay(Text("Back")) }
+            front: { Card(color: .green) },
+            back: { Card(color: .red) }
         )
         .withListRenderingBugFix()  // Use this when in a List 
+    }
+}
+
+struct Card: View {
+
+    let color: Color
+
+    var body: some View {
+        color.cornerRadius(10)
     }
 }
 ```
@@ -86,7 +95,7 @@ Feel free to reach out if you have questions, or want to contribute in any way:
 
 ## License
 
-FlipView is available under the MIT license. See the [LICENSE][License] file for more info.
+FlipKit is available under the MIT license. See the [LICENSE][License] file for more info.
 
 
 
@@ -100,6 +109,6 @@ FlipView is available under the MIT license. See the [LICENSE][License] file for
 [Mastodon]: https://mastodon.social/@danielsaidi
 [Twitter]: https://twitter.com/danielsaidi
 
-[Documentation]: https://danielsaidi.github.io/FlipView
-[Getting-Started]: https://danielsaidi.github.io/FlipView/documentation/flipview/getting-started
-[License]: https://github.com/danielsaidi/FlipView/blob/master/LICENSE
+[Documentation]: https://danielsaidi.github.io/FlipKit
+[Getting-Started]: https://danielsaidi.github.io/FlipKit/documentation/flipkit/getting-started
+[License]: https://github.com/danielsaidi/FlipKit/blob/master/LICENSE

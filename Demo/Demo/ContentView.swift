@@ -5,7 +5,7 @@
 //  Created by Daniel Saidi on 2025-06-02.
 //
 
-import FlipView
+import FlipKit
 import SwiftUI
 
 struct ContentView: View {
@@ -15,7 +15,7 @@ struct ContentView: View {
     var body: some View {
         FlipView(
             isFlipped: $isFlipped,
-            flipDuration: 100,
+            flipDuration: 0.3,
             front: { Card(.green) },
             back: { Card(.red) }
         )

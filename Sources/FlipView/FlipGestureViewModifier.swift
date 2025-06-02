@@ -1,6 +1,6 @@
 //
 //  FlipGestureViewModifier.swift
-//  FlipView
+//  FlipKit
 //
 //  Created by Daniel Saidi on 2020-01-03.
 //  Copyright © 2020-2025 Daniel Saidi. All rights reserved.

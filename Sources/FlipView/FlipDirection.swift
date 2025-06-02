@@ -1,6 +1,6 @@
 //
 //  FlipDirection.swift
-//  FlipView
+//  FlipKit
 //
 //  Created by Daniel Saidi on 2020-01-05.
 //  Copyright © 2020-2025 Daniel Saidi. All rights reserved.

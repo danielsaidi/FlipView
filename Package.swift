@@ -3,7 +3,7 @@
 import PackageDescription
 
 let package = Package(
-    name: "FlipView",
+    name: "FlipKit",
     platforms: [
         .iOS(.v17),
         .macOS(.v14),
@@ -13,17 +13,17 @@ let package = Package(
     ],
     products: [
         .library(
-            name: "FlipView",
-            targets: ["FlipView"]
+            name: "FlipKit",
+            targets: ["FlipKit"]
         )
     ],
     targets: [
         .target(
-            name: "FlipView"
+            name: "FlipKit"
         ),
         .testTarget(
-            name: "FlipViewTests",
-            dependencies: ["FlipView"]
+            name: "FlipKitTests",
+            dependencies: ["FlipKit"]
         )
     ]
 )
