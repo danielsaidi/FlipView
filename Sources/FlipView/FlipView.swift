@@ -16,7 +16,7 @@ import SwiftUI
 /// fixed by wrapping it in a `ZStack`. I tried to create an
 /// additional layer within this component, but that did not
 /// work. Until we come up with another solution, there is a
-/// temp ``SwiftUICore/View/withListRenderingBugFix()`` view
+/// temp ``FlipKit/View/withListRenderingBugFix()`` view
 /// modifier that performs the `ZStack` wrapping.
 public struct FlipView<FrontView: View, BackView: View>: View {
 
