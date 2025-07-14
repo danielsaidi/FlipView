@@ -12,76 +12,42 @@ import SwiftUI
 /// to show the other side when it's tapped or swiped.
 ///
 /// > Important: This view currently handles flip animations
-/// incorrectly when it is used within a `List`. This can be
-/// fixed by wrapping it in a `ZStack`. I tried to create an
-/// additional layer within this component, but that did not
-/// work. Until we come up with another solution, there is a
-/// temp ``SwiftUICore/View/withListRenderingBugFix()`` view
-/// modifier that performs the `ZStack` wrapping.
-public struct FlipView<FrontView: View, BackView: View>: View {
+/// incorrectly when used within a `List`. You can apply the
+/// ``SwiftUICore/View/withFlipViewListBugFix()`` to fix the
+/// bug until we find a way to do it natively.
+public struct FlipView<Content: View>: View {
 
-    /// Create a flip view with content view values.
-    ///
-    /// - Parameters:
-    ///   - isFlipped: The flipped state.
-    ///   - flipDuration: The duration of the flip, by deffault `0.3`.
-    ///   - tapDirection: The direction to flip on tap, by default `.right`.
-    ///   - flipDirections: The supported flip directions, by default `.allCases`.
-    ///   - front: The front view.
-    ///   - back: The back view.
-    public init(
-        front: FrontView,
-        back: BackView,
-        isFlipped: Binding<Bool>,
-        flipDuration: Double? = nil,
-        tapDirection: FlipDirection? = nil,
-        flipDirections: [FlipDirection]? = nil
-    ) {
-        self.init(
-            isFlipped: isFlipped,
-            flipDuration: flipDuration,
-            tapDirection: tapDirection,
-            flipDirections: flipDirections,
-            front: { front },
-            back: { back }
-        )
-    }
-    
     /// Create a flip view with content view builders.
     ///
     /// - Parameters:
     ///   - isFlipped: The flipped state.
-    ///   - flipDuration: The duration of the flip, by deffault `0.3`.
-    ///   - tapDirection: The direction to flip on tap, by default `.right`.
-    ///   - flipDirections: The supported flip directions, by default `.allCases`.
-    ///   - front: The front view.
-    ///   - back: The back view.
+    ///   - tapDirection: The flip direction for taps, by default `.right`.
+    ///   - swipeDirections: The supported swipe directions, by default `.allCases`.
+    ///   - content: The content view.
     public init(
         isFlipped: Binding<Bool>,
-        flipDuration: Double? = nil,
-        tapDirection: FlipDirection? = nil,
-        flipDirections: [FlipDirection]? = nil,
-        @ViewBuilder front: @escaping () -> FrontView,
-        @ViewBuilder back: @escaping () -> BackView,
+        tapDirection: FlipDirection = .right,
+        swipeDirections: [FlipDirection] = .allCases,
+        @ViewBuilder content: @escaping (Face) -> Content,
     ) {
-        self.front = front
-        self.back = back
+        self.content = content
         self._isFlipped = isFlipped
-        self.flipDuration = flipDuration ?? 0.3
-        self.tapDirection = tapDirection ?? .right
-        self.flipDirections = flipDirections ?? .allCases
-
-        let isFlippedValue = isFlipped.wrappedValue
-        self._isContentFlipped = .init(initialValue: isFlippedValue)
+        self.tapDirection = tapDirection
+        self.swipeDirections = swipeDirections
+        self._isContentFlipped = .init(initialValue: isFlipped.wrappedValue)
     }
+
+    public enum Face: Codable, Equatable, Hashable, Sendable {
+        case front, back
+    }
+
+    private let content: (Face) -> Content
+    private let swipeDirections: [FlipDirection]
+    private let tapDirection: FlipDirection
 
     @Binding private var isFlipped: Bool
 
-    private let front: () -> FrontView
-    private let back: () -> BackView
-    private let flipDuration: Double
-    private let flipDirections: [FlipDirection]
-    private let tapDirection: FlipDirection
+    @Environment(\.flipViewAnimation) var flipAnimation
 
     @State private var cardRotation = 0.0
     @State private var contentRotation = 0.0
@@ -91,8 +57,16 @@ public struct FlipView<FrontView: View, BackView: View>: View {
     @State private var isFlipping = false
     @State private var lastDirection = FlipDirection.right
 
+    private var flipAnimationFirst: Animation {
+        .linear(duration: flipAnimation.duration/2)
+    }
+
+    private var flipAnimationSecond: Animation {
+        flipAnimation.animation
+    }
+
     public var body: some View {
-        bodyContent
+        content(isContentFlipped ? .back : .front)
             .onChange(of: isFlipped) { _, _ in flipWithTap() }
             .withTapGesture(action: flipWithTap)
             .withSwipeGesture(action: flipWithSwipe)
@@ -100,22 +74,16 @@ public struct FlipView<FrontView: View, BackView: View>: View {
             .rotationEffect(.degrees(cardRotation), direction: lastDirection)
             .accessibility(addTraits: .isButton)
     }
-
-    @ViewBuilder
-    var bodyContent: some View {
-        if isContentFlipped {
-            back()
-        } else {
-            front()
-        }
-    }
 }
 
 public extension View {
 
     /// Apply this to a ``FlipView`` to make it perform well
     /// within a List.
-    func withListRenderingBugFix() -> some View {
+    ///
+    /// This shouldn't be needed, so if we find a way to fix
+    /// it, we should.
+    func withFlipViewListBugFix() -> some View {
         ZStack {
             self
         }
@@ -156,17 +124,13 @@ private extension FlipView {
         lastDirection = direction
         cardRotation = isContentFlipped ? 180 : 0
         contentRotation = isContentFlipped ? 180 : 0
-
-        let duration = flipDuration/2
-        let animation = Animation.linear(duration: duration)
-
         let degrees = flipDegrees(for: direction)
-        withAnimation(animation) {
+        withAnimation(flipAnimationFirst) {
             cardRotation += degrees/2
         } completion: {
             contentRotation += degrees
             isContentFlipped.toggle()
-            withAnimation(animation) {
+            withAnimation(flipAnimationSecond) {
                 cardRotation += degrees/2
             } completion: {
                 isFlipping = false
@@ -186,7 +150,7 @@ private extension FlipView {
     }
 
     func flipWithSwipe(in direction: FlipDirection) {
-        guard flipDirections.contains(direction) else { return }
+        guard swipeDirections.contains(direction) else { return }
         flip(direction)
     }
 }
@@ -208,19 +172,18 @@ private extension View {
 @MainActor
 @ViewBuilder
 func previewContent(isFlipped: Binding<Bool>) -> some View {
-    Text("Is Flipped: \(isFlipped.wrappedValue)")
-
+    let text = Text("Is Flipped: \(isFlipped.wrappedValue)")
+    let color = isFlipped.wrappedValue ? Color.red : Color.green
+    let colorView = color.clipShape(.rect(cornerRadius: 10))
     FlipView(
-        front: Color.green.overlay(Text("Front")),
-        back: Color.red.overlay(Text("Back")),
         isFlipped: isFlipped,
-        flipDuration: 0.2,
         tapDirection: .right,
-        flipDirections: [.left, .right, .up, .down]
+        swipeDirections: [.left, .right, .up, .down],
+        content: { _ in colorView.overlay(text) }
     )
-    .withListRenderingBugFix()  // OBS!
+    .flipViewAnimation(.snappy, duration: 0.5)
+    .withFlipViewListBugFix()  // OBS!
     .frame(minHeight: 100)
-    .cornerRadius(10)
     .shadow(radius: 0, x: 0, y: 2)
 
     Button("Flip") {
@@ -234,14 +197,11 @@ func previewContent(isFlipped: Binding<Bool>) -> some View {
 
     struct Preview: View {
 
-        @State
-        private var isFlipped = false
+        @State var isFlipped = false
 
         var body: some View {
-            VStack {
-                previewContent(isFlipped: $isFlipped)
-            }
-            .padding()
+            previewContent(isFlipped: $isFlipped)
+                .padding()
         }
     }
 
@@ -252,14 +212,12 @@ func previewContent(isFlipped: Binding<Bool>) -> some View {
 
     struct Preview: View {
 
-        @State
-        private var isFlipped = false
+        @State var isFlipped = false
 
         var body: some View {
             List {
                 previewContent(isFlipped: $isFlipped)
             }
-            .padding()
         }
     }
 

@@ -7,7 +7,6 @@ import Testing
     _ = await FlipGestureViewModifier()
     _ = await FlipView(
         isFlipped: .constant(true),
-        front: { Color.green },
-        back: { Color.red }
+        content: { _ in Color.green }
     )
 }

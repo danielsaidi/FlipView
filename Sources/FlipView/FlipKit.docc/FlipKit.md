@@ -40,13 +40,13 @@ struct MyView: View {
     var body: some View {
         FlipView(
             isFlipped: $isFlipped,
-            flipDuration: 1.0,
             tapDirection: .right,
             flipDirections: [.left, .right, .up, .down],
             front: { Card(color: .green) },
             back: { Card(color: .red) }
         )
-        .withListRenderingBugFix()  // Use this when in a List 
+        .flipViewAnimation(.linear, duration: 1.0)
+        .withListRenderingBugFix()  // For now, when used in a List 
     }
 }
 
@@ -81,6 +81,7 @@ FlipKit is available under the MIT license.
 ### Essentials
 
 - ``FlipView``
+- ``FlipViewAnimation``
 - ``FlipDirection``
 - ``FlipGestureViewModifier``
 
