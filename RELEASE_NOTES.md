@@ -6,6 +6,12 @@ Until then, breaking changes can happen in any minor version.
 
 
 
+## 0.3
+
+This update reverts the two front and back view builder parameters.
+
+
+
 ## 0.2
 
 This update fixes clipping and lets you change the animation.

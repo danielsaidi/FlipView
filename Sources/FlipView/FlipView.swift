@@ -15,7 +15,7 @@ import SwiftUI
 /// incorrectly when used within a `List`. You can apply the
 /// ``SwiftUICore/View/withFlipViewListBugFix()`` to fix the
 /// bug until we find a way to do it natively.
-public struct FlipView<Content: View>: View {
+public struct FlipView<Front: View, Back: View>: View {
 
     /// Create a flip view with content view builders.
     ///
@@ -23,14 +23,17 @@ public struct FlipView<Content: View>: View {
     ///   - isFlipped: The flipped state.
     ///   - tapDirection: The flip direction for taps, by default `.right`.
     ///   - swipeDirections: The supported swipe directions, by default `.allCases`.
-    ///   - content: The content view.
+    ///   - front: The front content view.
+    ///   - back: The front content view.
     public init(
         isFlipped: Binding<Bool>,
         tapDirection: FlipDirection = .right,
         swipeDirections: [FlipDirection] = .allCases,
-        @ViewBuilder content: @escaping (Face) -> Content,
+        @ViewBuilder front: @escaping () -> Front,
+        @ViewBuilder back: @escaping () -> Back,
     ) {
-        self.content = content
+        self.front = front
+        self.back = back
         self._isFlipped = isFlipped
         self.tapDirection = tapDirection
         self.swipeDirections = swipeDirections
@@ -41,7 +44,8 @@ public struct FlipView<Content: View>: View {
         case front, back
     }
 
-    private let content: (Face) -> Content
+    private let front: () -> Front
+    private let back: () -> Back
     private let swipeDirections: [FlipDirection]
     private let tapDirection: FlipDirection
 
@@ -66,13 +70,22 @@ public struct FlipView<Content: View>: View {
     }
 
     public var body: some View {
-        content(isContentFlipped ? .back : .front)
+        bodyContent
             .onChange(of: isFlipped) { _, _ in flipWithTap() }
             .withTapGesture(action: flipWithTap)
             .withSwipeGesture(action: flipWithSwipe)
             .rotationEffect(.degrees(contentRotation), direction: lastDirection)
             .rotationEffect(.degrees(cardRotation), direction: lastDirection)
             .accessibility(addTraits: .isButton)
+    }
+
+    @ViewBuilder
+    private var bodyContent: some View {
+        if isFlipped {
+            front()
+        } else {
+            back()
+        }
     }
 }
 
@@ -169,22 +182,31 @@ private extension View {
     }
 }
 
+private struct PreviewContent: View {
+
+    let isFlipped: Bool
+
+    var body: some View {
+        let text = Text("Is Flipped: \(isFlipped)")
+        let color = isFlipped ? Color.red : Color.green
+        let colorView = color.clipShape(.rect(cornerRadius: 10))
+        return colorView.overlay(text)
+    }
+}
+
 @MainActor
 @ViewBuilder
 func previewContent(isFlipped: Binding<Bool>) -> some View {
-    let text = Text("Is Flipped: \(isFlipped.wrappedValue)")
-    let color = isFlipped.wrappedValue ? Color.red : Color.green
-    let colorView = color.clipShape(.rect(cornerRadius: 10))
     FlipView(
         isFlipped: isFlipped,
         tapDirection: .right,
         swipeDirections: [.left, .right, .up, .down],
-        content: { _ in colorView.overlay(text) }
+        front: { PreviewContent(isFlipped: isFlipped.wrappedValue) },
+        back: { PreviewContent(isFlipped: isFlipped.wrappedValue) }
     )
-    .flipViewAnimation(.snappy, duration: 0.5)
+    .flipViewAnimation(.bouncy, duration: 0.5)
     .withFlipViewListBugFix()  // OBS!
     .frame(minHeight: 100)
-    .shadow(radius: 0, x: 0, y: 2)
 
     Button("Flip") {
         withAnimation {

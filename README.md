@@ -57,6 +57,7 @@ struct MyView: View {
             front: { Card(color: .green) },
             back: { Card(color: .red) }
         )
+        .flipViewAnimation(.linear, duration: 1.0)
         .withListRenderingBugFix()  // Use this when in a List 
     }
 }
